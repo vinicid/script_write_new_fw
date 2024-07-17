@@ -1,6 +1,4 @@
 import os
-from ppk2_api.ppk2_api2 import PPK2_API
-
 
 @staticmethod
 def pcb_uart_list_devices():
