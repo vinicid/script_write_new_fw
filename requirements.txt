@@ -1,0 +1,2 @@
+pyserial==3.5
+ppk2-api==0.9.2
