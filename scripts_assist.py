@@ -1,4 +1,8 @@
 
+from stlink import Stlink
+from script_constants import ADDRESS_STLINK, FW_PATH, STLINK_PATH
+
+
 def calc_checksum_two(value:str)-> str:
     """Calculate checksum of string value passed as argument.
 
@@ -39,6 +43,20 @@ def check_error_flags(hex_value:bytes) -> dict:
 
 def replace_str_index(text,index,replacement=' '):
     return f'{text[:index]}{replacement}{text[index+1:]}'
+
+def update_fw(fw_path:str=FW_PATH,address:bytes=ADDRESS_STLINK):
+    """Update the fw according to the new version.
+
+    Args:
+        fw_path (str, optional): Firmware path to update in the device. Defaults to FW_PATH.
+        address (bytes, optional): Address initial to update. Defaults to ADDRESS_STLINK.
+    """    
+    teste = Stlink()
+    teste.set_stlink_path(STLINK_PATH)
+    teste.connect_fast()
+    print(teste.program_file(fw_path,address))
+    if teste.is_connected() == True:
+        teste.disconnect()
 
 
 
