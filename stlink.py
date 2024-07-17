@@ -7,9 +7,11 @@ import re
 import time
 from datetime import datetime
 
-STLINK_PATH = "C:\\Program Files\\STMicroelectronics\\STM32Cube\\STM32CubeProgrammer\\bin\\STM32_Programmer_CLI.exe"
-LOCK_DELAY = 1
-GENERATE_LOG: bool = True
+from script_constants import GENERATE_LOG, STLINK_PATH
+
+# STLINK_PATH = "C:\\Program Files\\STMicroelectronics\\STM32Cube\\STM32CubeProgrammer\\bin\\STM32_Programmer_CLI.exe"
+# LOCK_DELAY = 1
+# GENERATE_LOG: bool = True
 
 #base
 # "C:\Program Files (x86)\STMicroelectronics\STM32Cube\STM32CubeProgrammer\bin\STM32_Programmer_CLI.exe" 
@@ -145,7 +147,7 @@ class Stlink:
     
     def connect_fast(self):
         self.device = ""
-        self.connect_str = " ".join(["-c", "port=SWD" ,"freq=4000","mode=HOTPLUG", "reset=SWrst"])
+        self.connect_str = " ".join(["-c", "port=SWD" ,"freq=4000","mode=Normal", "reset=HWrst"])
         return self.is_connected()
     
     def disconnect(self):
@@ -414,17 +416,20 @@ class Stlink:
         return True
 
 if __name__ == '__main__':
-    micro = mcu.Mcu("STM32WLE5xx")
-    #micro = mcu.Mcu("STM32L072CZ")
 
-    teste = Stlink()
-    teste.set_stlink_path(STLINK_PATH)
-    teste.set_target_con("53FF65066678495131440887")
+    pass
+
+    # teste = Stlink()
+    # teste.set_stlink_path(STLINK_PATH)
+    # teste.connect_fast()
+    # print(teste.program_file("C:\\Firmwares\\tagvis\\fw\\src\\Projects\\LoRaWAN_End_Node\\STM32CubeIDE\Debug\\STM32CubeIDE.bin",0x08000000))
+    # if teste.is_connected() == True:
+    #     teste.disconnect()
+    
    
-    teste.connect(micro)
-    #print(teste.read(0x08000000, 5))
-    #print(teste.hw_get_unique_id())
-    #teste.erase()
+    # print(teste.read(0x08000000, 5))
+    # teste.connect(micro)
+    # print(teste.hw_get_unique_id())
     
     #print(teste.hw_get_unique_id())
     #teste.unlock_mcu()
@@ -456,15 +461,14 @@ if __name__ == '__main__':
     #teste.is_mcu_locked()
     #print(teste.read(0x20000804, 14))
     #print(teste.is_connected())
-    '''
-    teste.connect(mcu)
-    teste.jlink_prog.reset()
-    if(not teste.is_mcu_locked()):
-        print("Device EUI: %s "%(teste.hw_get_unique_id()))
+
+    # teste.connect(mcu)
+    # teste.jlink_prog.reset()
+    # if(not teste.is_mcu_locked()):
+    #     print("Device EUI: %s "%(teste.hw_get_unique_id()))
         
-    teste.lock_mcu()
-    teste.is_mcu_locked()
-    teste.unlock_mcu()
-    #teste.erase()
-    teste.is_mcu_locked()
-    '''
+    # teste.lock_mcu()
+    # teste.is_mcu_locked()
+    # teste.unlock_mcu()
+    # teste.erase()
+    # teste.is_mcu_locked()
