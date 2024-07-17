@@ -2,7 +2,7 @@ import os
 from subprocess import *
 import struct
 import string
-import mcu
+# import mcu
 import re
 import time
 from datetime import datetime
