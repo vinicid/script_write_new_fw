@@ -51,12 +51,12 @@ def update_fw(fw_path:str=FW_PATH,address:bytes=ADDRESS_STLINK):
         fw_path (str, optional): Firmware path to update in the device. Defaults to FW_PATH.
         address (bytes, optional): Address initial to update. Defaults to ADDRESS_STLINK.
     """    
-    teste = Stlink()
-    teste.set_stlink_path(STLINK_PATH)
-    teste.connect_fast()
-    print(teste.program_file(fw_path,address))
-    if teste.is_connected() == True:
-        teste.disconnect()
+    stlink = Stlink()
+    stlink.set_stlink_path(STLINK_PATH)
+    stlink.connect_fast()
+    print(stlink.program_file(fw_path,address))
+    if stlink.is_connected() == True:
+        stlink.disconnect()
 
 
 
