@@ -5,22 +5,38 @@ from time import sleep
 import serial
 from config.device_configs import DeviceConfigs
 from integration.connect_devices import find_pcb_uart, find_ppk2
-from scripts_assist import calc_checksum_two, check_error_flags,verify_check_sum_im_alive
+from scripts_assist import calc_checksum_two, check_error_flags, update_fw,verify_check_sum_im_alive
 from ppk2_api.ppk2_api2 import PPK2_API
 
 
-def script_write_new_fw():
+def script_write_new_fw(new_keys:dict=None):
     
     
     print(f'\n---------------- Start of the Script - {datetime.now()}')
     print(f'\nPré-Conditions Configuration')
     print(f'\nDevice Configuration')
     DeviceConfigs.device_eui = ''
-    DeviceConfigs.network_session_key = secrets.token_hex(16)
-    DeviceConfigs.application_session_key = secrets.token_hex(16)
-    DeviceConfigs.device_address = secrets.token_hex(4)
-
+    if type(new_keys) == dict:
+        DeviceConfigs.network_session_key = new_keys['network_session_key']
+        DeviceConfigs.application_session_key = new_keys['application_session_key']
+        DeviceConfigs.device_address = new_keys['device_address'] 
+    else:
+        DeviceConfigs.network_session_key = secrets.token_hex(16)
+        DeviceConfigs.application_session_key = secrets.token_hex(16)
+        DeviceConfigs.device_address = secrets.token_hex(4)
     print(f'\nMessages Configuration')
+
+    print(f'\nPower Profiler PPK2 configuration')
+    ppk2_port = find_ppk2()
+    ppk2_test = PPK2_API(ppk2_port, timeout=3, write_timeout=3, exclusive=True)
+    ppk2_test.set_source_voltage(3000)
+    ppk2_test.toggle_DUT_power("OFF")
+    sleep(2)
+    ppk2_test.toggle_DUT_power("ON")
+
+    print(f'\n----------------Firmware Update Started')
+    update_fw()
+    print(f'\n----------------Firmware Update Finished')
     # Start Testing Message
     start_test_byte1 = '02' # STX
     start_test_byte2 = '04' # Message Id
@@ -38,17 +54,13 @@ def script_write_new_fw():
     stop_test_byte4 =  calc_checksum_two(stop_test_byte1+stop_test_byte2+stop_test_byte3) # checksum
     stop_test_message = (stop_test_byte1+stop_test_byte2+stop_test_byte3+stop_test_byte4) # Stop Test Message
 
-    print(f'\nPower Profiler PPK2 configuration')
-    ppk2_port = find_ppk2()
-    ppk2_test = PPK2_API(ppk2_port, timeout=3, write_timeout=3, exclusive=True)
-    ppk2_test.set_source_voltage(3000)
 
     print(f'\nStart Serial Connection')
     pcb_uart_port = find_pcb_uart()
     with serial.Serial(pcb_uart_port,baudrate=115200,bytesize=8,stopbits=1) as porta:
-        ppk2_test.toggle_DUT_power("OFF")
-        sleep(2)
-        ppk2_test.toggle_DUT_power("ON")
+        # ppk2_test.toggle_DUT_power("OFF")
+        # sleep(2)
+        # ppk2_test.toggle_DUT_power("ON")
         resp_im_alive = porta.read(11).hex()
         verify_check_sum_im_alive(resp_im_alive)              
         DeviceConfigs.device_eui = resp_im_alive[4:20]
@@ -83,7 +95,13 @@ def script_write_new_fw():
             print(f"PLEASE PUT THE MAGNET ON TOP OF THE PCB")
     sleep(20)
     print(f'\n---------------- End of the Script - {datetime.now()}')
-script_write_new_fw()
+
+keys = {
+    'device_address': '05214ee1',  
+    'network_session_key': '2b7e151628aed2a6abf7158809cf4f3c',
+    'application_session_key': '2b7e151628aed2a6abf7158809cf4f3c',
+}
+script_write_new_fw(new_keys=keys)
 
 
 
