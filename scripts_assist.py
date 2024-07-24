@@ -42,6 +42,16 @@ def check_error_flags(hex_value:bytes) -> dict:
     return dict_error_flag
 
 def replace_str_index(text,index,replacement=' '):
+    """Replace string index.
+
+    Args:
+        text (_type_): _description_
+        index (_type_): _description_
+        replacement (str, optional): _description_. Defaults to ' '.
+
+    Returns:
+        _type_: _description_
+    """    
     return f'{text[:index]}{replacement}{text[index+1:]}'
 
 def update_fw(fw_path:str=FW_PATH,address:bytes=ADDRESS_STLINK):
