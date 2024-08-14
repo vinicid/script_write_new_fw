@@ -28,7 +28,7 @@ def check_error_flags(hex_value:bytes) -> dict:
     Returns:
         dict: Returns the error flags dictionary.
     """    
-    bin_error_flags = bin(int(hex_value[22:24],16))[2:]
+    bin_error_flags = bin(int(hex_value[22:24],16))[2:].zfill(8)
     dict_error_flag = {
             'GNSS UART': 'error' if int(bin_error_flags[-1]) else 'no error', 
             'GNSS PPS Level':'error' if int(bin_error_flags[-2]) else 'no error', 
@@ -37,7 +37,7 @@ def check_error_flags(hex_value:bytes) -> dict:
             'Accel Valid': 'error' if int(bin_error_flags[-5]) else 'no error', 
             'RTC': 'error' if int(bin_error_flags[-6]) else 'no error', 
             'HALL': 'error' if int(bin_error_flags[-7]) else 'no error', 
-            # 'Radio (P2P)': 'error' if int(bin_error_flags[-8]) else 'no error', 
+            'Radio (P2P)': 'error' if int(bin_error_flags[-8]) else 'no error', 
     }
     return dict_error_flag
 
