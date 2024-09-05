@@ -26,7 +26,7 @@ def find_pcb_uart() -> any:
         uart_port = uart_connected[0]
         print(f'Found PPK2 at {uart_port}')
     else:
-        print(f'Too many connected PPK2\'s: {uart_connected}')
+        print(f'Too many connected uart: {uart_connected}')
         exit()
     return uart_port
 
