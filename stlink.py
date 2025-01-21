@@ -7,7 +7,7 @@ import re
 import time
 from datetime import datetime
 
-from script_constants import GENERATE_LOG, STLINK_PATH
+from script_constant import GENERATE_LOG, STLINK_PATH
 
 # STLINK_PATH = "C:\\Program Files\\STMicroelectronics\\STM32Cube\\STM32CubeProgrammer\\bin\\STM32_Programmer_CLI.exe"
 # LOCK_DELAY = 1
@@ -243,7 +243,7 @@ class Stlink:
     def program_file(self,img_path,addr):
         output = run_command([self.stlink_path, self.connect_str,"-q --write", img_path, "0x%04x"%addr,self.generate_log_str()])
         
-        if 'File download complete' in output:
+        if  'File download complete' in output:
             return 'success'
         
         return output
