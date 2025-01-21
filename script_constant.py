@@ -6,4 +6,5 @@ STLINK_PATH = "C:\\Program Files\\STMicroelectronics\\STM32Cube\\STM32CubeProgra
 LOCK_DELAY = 1
 GENERATE_LOG: bool = True
 FW_PATH = "C:\\Firmwares\\tagvis\\fw\\src\\Projects\\LoRaWAN_End_Node\\STM32CubeIDE\Debug\\STM32CubeIDE.bin"
+# FW_PATH = "C:\\Projects\\script_write_new_fw\\fw\\FW201_20_01_debug.hex"
 ADDRESS_STLINK = 0x08000000

@@ -3,13 +3,16 @@ import secrets
 from datetime import datetime
 from time import sleep
 import serial
-from config.device_configs import DeviceConfigs
-from integration.connect_devices import find_pcb_uart, find_ppk2
-from scripts_assist import calc_checksum_two, check_error_flags, verify_check_sum_im_alive
+
+
+from configs.device_configs import DeviceConfigs
+from integrations.connect_devices import find_pcb_uart, find_ppk2
+from scripts_assist import calc_checksum_two, check_error_flags, update_fw,verify_check_sum_im_alive
 from ppk2_api.ppk2_api2 import PPK2_API
 
 
 def script_write_new_fw(new_keys:dict=None):
+    
     
     print(f'\n---------------- Start of the Script - {datetime.now()}')
     print(f'\nPré-Conditions Configuration')
@@ -33,10 +36,13 @@ def script_write_new_fw(new_keys:dict=None):
     sleep(2)
     ppk2_test.toggle_DUT_power("ON")
 
+    print(f'\n----------------Firmware Update Started')
+    update_fw()
+    print(f'\n----------------Firmware Update Finished')
     # Start Testing Message
     start_test_byte1 = '02' # STX
     start_test_byte2 = '04' # Message Id
-    start_test_byte3 = '01' # Tag number in the Jig
+    start_test_byte3 = '11' # Tag number in the Jig
     start_test_byte4_19 = DeviceConfigs.network_session_key # network session key
     start_test_byte20_35 = DeviceConfigs.application_session_key # application session key 
     start_test_byte36_39 = DeviceConfigs.device_address # device address
@@ -54,6 +60,9 @@ def script_write_new_fw(new_keys:dict=None):
     print(f'\nStart Serial Connection')
     pcb_uart_port = find_pcb_uart()
     with serial.Serial(pcb_uart_port,baudrate=115200,bytesize=8,stopbits=1) as porta:
+        # ppk2_test.toggle_DUT_power("OFF")
+        # sleep(2)
+        # ppk2_test.toggle_DUT_power("ON")
         resp_im_alive = porta.read(11).hex()
         verify_check_sum_im_alive(resp_im_alive)              
         DeviceConfigs.device_eui = resp_im_alive[4:20]
@@ -63,8 +72,7 @@ def script_write_new_fw(new_keys:dict=None):
             print(f"Message -  Start testing: {start_test_message}")
             sleep(2)
             porta.write(bytes.fromhex(start_test_message))
-            resp_test_report = porta.read(16).hex()
-            
+            resp_test_report = porta.read(20).hex()
             # Check the error flags are correct
             for value in check_error_flags(resp_test_report).items():
                 if value[1] == 'error':
@@ -90,7 +98,7 @@ def script_write_new_fw(new_keys:dict=None):
     print(f'\n---------------- End of the Script - {datetime.now()}')
 
 keys = {
-    'device_address': '057c4978',  
+    'device_address': '5001218e',  
     'network_session_key': '2b7e151628aed2a6abf7158809cf4f3c',
     'application_session_key': '2b7e151628aed2a6abf7158809cf4f3c',
 }

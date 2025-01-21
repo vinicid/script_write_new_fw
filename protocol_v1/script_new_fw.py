@@ -3,7 +3,9 @@ import secrets
 from datetime import datetime
 from time import sleep
 import serial
-from config.device_configs import DeviceConfigs
+
+
+from configs.device_configs import DeviceConfigs
 from integration.connect_devices import find_pcb_uart, find_ppk2
 from scripts_assist import calc_checksum_two, check_error_flags, update_fw,verify_check_sum_im_alive
 from ppk2_api.ppk2_api2 import PPK2_API
@@ -96,11 +98,11 @@ def script_write_new_fw(new_keys:dict=None):
     print(f'\n---------------- End of the Script - {datetime.now()}')
 
 keys = {
-    'device_address': '057c5231',  
-    'network_session_key': '2b7e151628aed2a6abf7158809cf4f3c',
-    'application_session_key': '0651744826c98da7d32e8c41201eaa72',
+    'device_address': '08c126b2',  
+    'network_session_key': 'b0e77c94a51c70089f8a5f7af9fd0fd5',
+    'application_session_key': '947767afd827bd51f68c6edf4108a069',
 }
-script_write_new_fw(new_keys=keys)
+script_write_new_fw()
 
 
 

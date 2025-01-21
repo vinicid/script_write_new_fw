@@ -1,6 +1,10 @@
 
+
+
+
+
+from script_constant import ADDRESS_STLINK, FW_PATH, STLINK_PATH
 from stlink import Stlink
-from script_constants import ADDRESS_STLINK, FW_PATH, STLINK_PATH
 
 
 def calc_checksum_two(value:str)-> str:
@@ -41,16 +45,16 @@ def check_error_flags(hex_value:bytes) -> dict:
     }
     return dict_error_flag
 
-def replace_str_index(text,index,replacement=' '):
-    """Replace string index.
+def replace_str_index(text, index, replacement=' '):
+    """Replaces a character at a specific position in a string.
 
     Args:
-        text (_type_): _description_
-        index (_type_): _description_
-        replacement (str, optional): _description_. Defaults to ' '.
+        text (str): The original string.
+        index (int): The position of the character to be replaced.
+        replacement (str, optional): The replacement character. Defaults to a space (' ').
 
     Returns:
-        _type_: _description_
+        str: The new string with the character replaced.
     """    
     return f'{text[:index]}{replacement}{text[index+1:]}'
 
@@ -67,7 +71,3 @@ def update_fw(fw_path:str=FW_PATH,address:bytes=ADDRESS_STLINK):
     print(stlink.program_file(fw_path,address))
     if stlink.is_connected() == True:
         stlink.disconnect()
-
-
-
-
